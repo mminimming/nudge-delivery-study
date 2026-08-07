@@ -1,0 +1,12 @@
+.submission-status {
+  width: min(620px, 100%);
+  margin: 18px auto 0;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  display: none;
+}
+.submission-status.sending { display: block; background: #f4f4e3; color: #6c6424; }
+.submission-status.success { display: block; background: #e8f4ee; color: #0e5b43; }
+.submission-status.error { display: block; background: #fbece8; color: #a43c28; }

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="배송 선택 및 넛지 연구용 모의 쇼핑 실험" />
+    <title>오늘의 장보기 | 배송 선택 연구</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="shop-and-map.css" />
+    <link rel="stylesheet" href="address-search-fix.css" />
+    <link rel="stylesheet" href="online-submission.css" />
+    <script src="config.js" defer></script>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="처음으로">
+        <span class="brand-mark">N</span>
+        <span>오늘의 장보기</span>
+      </a>
+      <div class="secure-label">연구용 모의 주문 · 실제 결제 없음</div>
+    </header>
+
+    <main class="page-shell">
+      <section class="progress-panel" aria-label="주문 진행 단계">
+        <div class="progress-meta">
+          <span id="progressLabel">상품선택</span>
+          <span id="progressCount">1 / 5</span>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        <ol class="progress-steps">
+          <li class="active" data-progress-step="1">상품선택</li>
+          <li data-progress-step="2">배송정보</li>
+          <li data-progress-step="3">배송선택</li>
+          <li data-progress-step="4">주문확인</li>
+          <li data-progress-step="5">앙케이트</li>
+        </ol>
+      </section>
+
+      <section id="stepProducts" class="step active" data-step="1">
+        <div class="section-heading">
+          <p class="eyebrow">DAILY ESSENTIALS</p>
+          <h1>배송받을 상품을 골라주세요</h1>
+          <p>필요한 생필품을 장바구니에 담은 다음 배송정보 입력 단계로 이동합니다.</p>
+        </div>
+        <div class="shop-layout">
+          <div id="productGrid" class="product-grid"></div>
+          <aside class="cart-panel">
+            <div><p class="eyebrow">MY CART</p><h2>장바구니 <span id="cartCount">0</span></h2></div>
+            <div id="cartItems" class="cart-items"><p class="empty-cart">상품을 하나 이상 담아주세요.</p></div>
+            <div class="cart-total"><span>총 상품금액</span><strong id="cartTotal">0원</strong></div>
+            <p id="cartError" class="form-error" role="alert"></p>
+            <button id="cartContinue" class="button primary full-button" type="button">배송정보 입력하기 →</button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="stepDelivery" class="step" data-step="2">
+        <div class="section-heading">
+          <p class="eyebrow">DELIVERY DETAILS</p>
+          <h1>배송 위치를 확인해주세요</h1>
+          <p>검색한 주소의 위치를 지도에서 확인하고, 해당 위치를 기준으로 후보 배송 슬롯을 계산합니다.</p>
+        </div>
+
+        <form id="deliveryForm" class="form-card" novalidate>
+          <div class="privacy-note">
+            <span aria-hidden="true">🔒</span>
+            <div><strong>주소정보 안내</strong><br />주소는 배송 경로 실험을 위해 사용됩니다. 이름, 전화번호, 공동현관 비밀번호, 결제정보는 입력하지 마세요.</div>
+          </div>
+
+          <div class="form-grid">
+            <label class="field-group full-width">
+              <span>도로명 주소 <em>필수</em></span>
+              <div class="address-row"><input id="roadAddress" name="roadAddress" type="text" placeholder="주소 검색 버튼을 눌러주세요" readonly required /><button id="addressSearch" class="button secondary" type="button">주소 검색</button></div>
+              <input id="postcode" name="postcode" type="hidden" />
+            </label>
+
+            <div id="addressSearchPanel" class="address-search-panel full-width" hidden>
+              <div class="address-search-head"><strong>배송 주소 검색</strong><button id="addressSearchClose" type="button" aria-label="주소 검색 닫기">×</button></div>
+              <div id="postcodeEmbed" class="postcode-embed"></div>
+            </div>
+
+            <label class="field-group full-width"><span>상세주소 <small>선택 · 동·호수 등 식별정보는 입력하지 않는 것을 권장</small></span><input name="addressDetail" type="text" maxlength="100" placeholder="배송 실험에 필요한 경우에만 입력" /></label>
+
+            <label class="field-group">
+              <span>건물 유형 <em>필수</em></span>
+              <select name="buildingType" required>
+                <option value="">선택해주세요</option>
+                <option>단독주택</option><option>공동주택</option><option>오피스텔</option><option>기타</option>
+              </select>
+            </label>
+
+            <fieldset class="field-group">
+              <legend>엘리베이터 <span class="required">필수</span></legend>
+              <div class="segmented">
+                <label><input type="radio" name="elevator" value="있음" required /><span>있음</span></label>
+                <label><input type="radio" name="elevator" value="없음" /><span>없음</span></label>
+                <label><input type="radio" name="elevator" value="해당 없음" /><span>해당 없음</span></label>
+              </div>
+            </fieldset>
+
+            <label class="field-group">
+              <span>희망 배송일 <em>필수</em></span>
+              <select name="deliveryDate" required>
+                <option value="">선택해주세요</option>
+                <option value="today">오늘</option><option value="tomorrow">내일</option><option value="day-after">모레</option>
+              </select>
+            </label>
+
+            <label class="field-group">
+              <span>수령 방식 <em>필수</em></span>
+              <select name="receptionMethod" required>
+                <option value="">선택해주세요</option><option>문 앞 배송</option><option>직접 수령</option><option>공동현관·보관함</option>
+              </select>
+            </label>
+
+            <label class="field-group full-width">
+              <span>배송 관련 특별조건 <small>선택</small></span>
+              <textarea name="specialCondition" rows="3" maxlength="300" placeholder="예: 계단 이용 필요, 대면 수령 필요 등 (공동현관 비밀번호 등 민감정보 입력 금지)"></textarea>
+            </label>
+          </div>
+          <p id="deliveryError" class="form-error" role="alert"></p>
+          <div class="action-row"><button class="button secondary" type="button" data-back="1">← 상품 다시 선택</button><button class="button primary" type="submit">주소 기반 배송 옵션 계산 <span>→</span></button></div>
+        </form>
+      </section>
+
+      <section id="stepOptions" class="step" data-step="3">
+        <div class="section-heading">
+          <p class="eyebrow">CHOOSE DELIVERY</p>
+          <h1>원하는 배송 시간을 선택해주세요</h1>
+          <p>입력한 배송 조건을 바탕으로 예상 환경 영향과 배송 부담을 계산했습니다.</p>
+        </div>
+        <div id="dynamicNotice" class="dynamic-notice"></div>
+        <div id="deliveryOptions" class="delivery-options"></div>
+        <p id="optionError" class="form-error" role="alert"></p>
+        <div class="action-row"><button class="button secondary" type="button" data-back="2">← 배송정보 수정</button><button id="optionContinue" class="button primary" type="button">선택 완료 <span>→</span></button></div>
+      </section>
+
+      <section id="stepConfirm" class="step" data-step="4">
+        <div class="section-heading">
+          <p class="eyebrow">ORDER REVIEW</p>
+          <h1>선택 내용을 확인해주세요</h1>
+          <p>본 화면은 연구용 주문 확인이며 실제 주문이나 결제가 발생하지 않습니다.</p>
+        </div>
+        <div class="review-layout">
+          <div class="review-card"><h2>상품 및 배송정보</h2><div id="cartSummary" class="mini-cart"></div><dl id="deliverySummary"></dl><button class="text-button" type="button" data-back="2">배송정보 수정</button></div>
+          <div class="review-card accent"><h2>선택한 배송 옵션</h2><div id="optionSummary"></div><button class="text-button" type="button" data-back="3">배송 옵션 변경</button></div>
+        </div>
+        <div class="action-row"><button class="button secondary" type="button" data-back="3">← 이전</button><button id="confirmOrder" class="button primary" type="button">모의 주문 확정 <span>→</span></button></div>
+      </section>
+
+      <section id="stepSurvey" class="step" data-step="5">
+        <div class="section-heading">
+          <p class="eyebrow">POST-SURVEY</p>
+          <h1>마지막으로 선택 경험을 알려주세요</h1>
+          <p>응답은 배송 선택 결과 및 익명 참가자 ID와 연결됩니다. <span class="required">*</span> 표시는 필수 문항입니다.</p>
+        </div>
+        <form id="surveyForm" novalidate>
+          <article class="survey-section">
+            <span class="section-number">01</span><h2>최종 선택 이유</h2>
+            <fieldset class="question"><legend>선택에 가장 중요했던 이유는 무엇인가요? <em>*</em></legend><div class="radio-list" id="reasonChoices"></div></fieldset>
+            <div id="influenceQuestions" class="likert-block"></div>
+          </article>
+          <article class="survey-section">
+            <span class="section-number">02</span><h2>정보 인식 및 이해</h2>
+            <div id="perceptionQuestions" class="likert-block"></div>
+          </article>
+          <article class="survey-section">
+            <span class="section-number">03</span><h2>태도 및 성향</h2>
+            <div id="attitudeQuestions" class="likert-block"></div>
+          </article>
+          <article class="survey-section">
+            <span class="section-number">04</span><h2>이용자 특성</h2>
+            <div id="demographicQuestions" class="form-grid"></div>
+          </article>
+          <article class="survey-section">
+            <span class="section-number">05</span><h2>자유응답</h2>
+            <label class="field-group full-width"><span>배송 선택 또는 쇼핑몰 이용에 관해 남기고 싶은 의견이 있나요? <small>선택</small></span><textarea name="openFeedback" rows="4" maxlength="1000" placeholder="의견을 자유롭게 적어주세요."></textarea></label>
+            <fieldset class="question compact"><legend>연구의 목적이 무엇이라고 생각했나요? <small>선택</small></legend><textarea name="purposeGuess" rows="3" maxlength="500" placeholder="추측한 내용을 적어주세요."></textarea></fieldset>
+          </article>
+          <p id="surveyError" class="form-error" role="alert"></p>
+          <div class="action-row"><button class="button secondary" type="button" id="surveyBack">← 주문정보 보기</button><button class="button primary" type="submit">앙케이트 제출하기 <span>→</span></button></div>
+        </form>
+      </section>
+
+      <section id="stepComplete" class="step complete-panel" data-step="6">
+        <div class="complete-icon">✓</div><p class="eyebrow">COMPLETE</p><h1>참여해주셔서 감사합니다</h1>
+        <p id="submissionMessage">모의 주문과 앙케이트 응답이 저장되었습니다.</p>
+        <div id="submissionStatus" class="submission-status" role="status"></div>
+        <div class="participant-ticket"><span>참가자 ID</span><strong id="completeParticipantId"></strong></div>
+        <div class="complete-actions"><button id="downloadJson" class="button secondary" type="button">연구 데이터 JSON 저장</button><button id="downloadCsv" class="button secondary" type="button">앙케이트 CSV 저장</button></div>
+        <button id="restartStudy" class="text-button danger" type="button">테스트 데이터 초기화 후 다시 시작</button>
+      </section>
+    </main>
+    <footer><span>배송 선택 행동 연구 프로토타입</span><span>Survey version 1.1</span></footer>
+  </body>
+</html>
