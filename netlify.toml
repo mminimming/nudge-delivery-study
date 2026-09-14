@@ -1,0 +1,11 @@
+[build]
+  command = "node scripts/build-public.cjs"
+  publish = "dist"
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = ["data/taito-network.json"]
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache"

@@ -1,23 +1,31 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="배송 선택 및 넛지 연구용 모의 쇼핑 실험" />
-    <title>오늘의 장보기 | 배송 선택 연구</title>
+    <meta name="description" content="配送選択とナッジに関する模擬ショッピング調査" />
+    <meta property="og:title" content="配送選択研究" />
+    <meta property="og:description" content="配送選択とナッジに関する模擬ショッピング調査" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <title>配送選択研究</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="shop-and-map.css" />
     <link rel="stylesheet" href="address-search-fix.css" />
     <link rel="stylesheet" href="online-submission.css" />
+    <link rel="stylesheet" href="japan-checkout.css?v=label1" />
+    <link rel="stylesheet" href="taito-delivery.css" />
     <script src="config.js" defer></script>
-    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" defer></script>
-    <script src="app.js" defer></script>
+    <script src="routing-api.js?v=shared1" defer></script>
+    <script src="delivery-engine.js?v=shared1" defer></script>
+    <script src="delivery-ui.js?v=shared1" defer></script>
+    <script src="japan-app.js?v=shared1" defer></script>
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="#" aria-label="처음으로">
-        <span class="brand-mark">N</span>
-        <span>오늘의 장보기</span>
+        <span class="brand-mark">研</span>
+        <span>配送選択研究</span>
       </a>
       <div class="secure-label">연구용 모의 주문 · 실제 결제 없음</div>
     </header>

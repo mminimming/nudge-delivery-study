@@ -19,7 +19,7 @@ drop policy if exists "public may submit study response" on public.study_submiss
 create policy "public may submit study response" on public.study_submissions
 for insert to anon, authenticated with check (
   length(participant_id) between 1 and 100 and length(session_id) between 1 and 100
-  and survey_version = '1.1' and jsonb_typeof(delivery_information) = 'object'
+  and survey_version in ('1.1', '2.0-JP', '3.0-JP-Taito', '3.1-JP-Taito-Flex') and jsonb_typeof(delivery_information) = 'object'
   and jsonb_typeof(survey_responses) = 'object' and jsonb_typeof(event_log) = 'array'
 );
 -- SELECT 정책은 만들지 않습니다. 공개 웹페이지는 응답을 읽을 수 없습니다.

@@ -1,0 +1,4 @@
+[out:json][timeout:45];
+way[highway~"^(primary|secondary|tertiary|unclassified|residential|living_street|service|primary_link|secondary_link|tertiary_link)$"](35.692,139.767,35.733,139.813)->.roads;
+(.roads;node(w.roads);rel(bw.roads)[type=restriction];);out body;
+way[building](35.692,139.767,35.733,139.813);out center;

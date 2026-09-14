@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>다이토 배송 계산실</title>
+  <link rel="stylesheet" href="taito-delivery.css"><link rel="stylesheet" href="routing-lab.css">
+  <script src="routing-api.js?v=shared1" defer></script>
+    <script src="delivery-engine.js?v=shared1" defer></script><script src="delivery-ui.js?v=shared1" defer></script><script src="routing-lab.js?v=shared1" defer></script>
+</head>
+<body>
+<header><a href="index.html?research=1">배송 선택 연구 <span>↗ 주문 화면</span></a><span class="pill">연구자용 · 초기 모형</span></header>
+<main>
+  <div class="lab-heading"><div><p class="eyebrow">TAITO DELIVERY LAB</p><h1>입력이 바뀌면,<br>배송 경로도 달라집니다.</h1><p>실제 도로 위에 주문을 추가하고, 가능한 시간대와 운영 영향을 비교하세요.</p></div><div class="depot-card"><span>고정 출발 거점</span><strong>元浅草営業所</strong><p>도쿄도 다이토구 모토아사쿠사 4-7-9</p><small>실제 위치를 사용한 연구 시나리오<br>사업자의 실제 배송 운영을 재현한 것은 아닙니다.</small></div></div>
+  <div class="model-note"><strong>실제 공간, 명시적인 가정.</strong> OSM 도로·건물 위치를 사용합니다. 초기 주문은 0건이며, 확정한 예약만 순차적으로 누적합니다. 차량 3대·통상 속도·연비·작업시간은 연구 가정입니다. 실시간 교통 및 실측 탄소·피로 자료가 아닙니다.</div>
+  <div class="lab-toolbar"><button id="reset" type="button" disabled>누적 주문 초기화</button><button id="export" type="button" disabled>계산 기록 JSON</button><span id="revision" class="pill">데이터 로딩 중</span></div>
+  <div class="lab-grid"><section class="input-panel"><h2>새 주문 입력</h2><form id="labForm">
+    <label>배송 위치<select id="destination" name="destinationId" required><option value="">불러오는 중…</option></select></label>
+    <div class="two"><label>무게 · kg<input type="number" name="weightKg" value="2" min="0.1" max="500" step="0.1" required></label><label>부피 · L<input type="number" name="litres" value="12" min="0.1" max="2000" step="0.1" required></label></div>
+    <label>건물 유형<select name="buildingType"><option value="apartment">공동주택</option><option value="house">단독주택</option><option value="office">업무시설</option></select></label>
+    <label>엘리베이터<select name="elevator"><option value="yes">있음</option><option value="no">없음</option><option value="na">해당 없음</option></select></label>
+    <label>수령 방식<select name="receptionMethod"><option value="handover">직접 수령</option><option value="doorstep">문 앞 배송</option><option value="locker">택배 보관함</option></select></label>
+    <label>직접 수령 가능 시간<select name="availability"><option value="all">10–22시</option><option value="morning">10–12시만</option><option value="afternoon">12–22시</option><option value="late">16–22시</option></select></label>
+    <p class="small">문 앞 배송·보관함은 재택시간으로 제한하지 않습니다.</p>
+    <button id="calculate" class="primary" type="submit" disabled>시간대 계산하기 →</button>
+  </form><p id="error" role="alert"></p></section>
+  <section class="map-panel"><div class="panel-heading"><h2>실제 도로와 배송 지점</h2><span id="networkStamp" class="small"></span></div><div id="labMap"></div><p id="mapHelp" class="small">보라색 점을 누르면 배송 위치를 바꿀 수 있습니다.</p><div id="baselineStats" class="stats"></div></section></div>
+  <section class="results-panel"><div class="panel-heading"><div><p class="eyebrow">SLOT COMPARISON</p><h2>빠른 배송과 시간 맡기기를 비교하세요</h2></div><span id="calculationTime" class="small"></span></div><div id="results" class="result-grid"><p>데이터를 준비하고 있습니다.</p></div><p id="resultNote" class="small"></p></section>
+  <div class="bottom-grid"><section class="history-panel"><h2>예약 상태 변화</h2><p class="small">시간대를 확정하면 경로와 잔여 용량이 바뀝니다. 다음 주문은 갱신된 상태에서 계산합니다.</p><ol id="bookingHistory"><li>아직 추가 예약이 없습니다.</li></ol></section><section class="method-panel"><h2>계산의 의미</h2><p><b>추가 CO₂</b> = 새 경로 배출량 − 기존 경로 배출량.<br>주행거리 ÷ 10 km/L × 2.32 kg CO₂/L의 가정값을 사용합니다.</p><p><b>추가 작업</b> = 운전 + 접근·전달 작업의 증가분.<br>대기 포함 시간과 기사별 최대시간은 따로 검토합니다.</p><p><b>추천</b> = 가장 빠른 가능 시간대보다 팀 작업·대기 포함 시간·최대 개인시간을 늘리지 않으면서 CO₂를 줄이는 시간대.</p><p class="small">전역 최적해가 아닌 넓은 구간 주문을 재배치하는 경로 탐색입니다. 건물 출입구·주차·일부 통행 제한은 단순화되어 있습니다.</p><a href="docs/taito-model.md">모형·출처·검증 문서 ↗</a></section></div>
+</main><footer>공유 실험 링크에서는 서버가 누적 예약을 계산·저장합니다. 로컬 단독 모드는 이 브라우저에서 계산합니다.</footer>
+</body></html>

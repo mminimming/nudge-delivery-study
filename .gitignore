@@ -2,3 +2,8 @@
 .Rhistory
 *.log
 .netlify/
+dist/
+.env
+.env.*
+!.env.example
+.server-data/

@@ -3,6 +3,6 @@
 window.NUDGE_STUDY_CONFIG = {
   supabaseUrl: "https://lthrizxizophfkgkpipx.supabase.co",
   supabasePublishableKey: "sb_publishable_29vzgB6XMpVbp32eM0UvmA_SlB8TrQz",
-  // 화면에 표시할 임시 배송 출발 거점 이름
-  depotName: "서울시청 임시 거점",
+  // 実在する位置を使う研究用の固定配送拠点（運用条件は仮定）
+  depotName: "元浅草営業所（台東区元浅草4丁目7-9）",
 };
