@@ -1,0 +1,26 @@
+{
+  "recorded_date": "2026-11-01",
+  "base_repository": "https://github.com/mminimming/nudge-delivery-study",
+  "base_commit": "a98209b0d9ca9abc00163dd38e8876112ab2cf41",
+  "model_version": "taito-flex-v2.1-fixed-two",
+  "network_git_blob_sha": "c8fb2ad5f7d1053fd0162f42fb12216f580009bc",
+  "network_normalized_sha256": "277ecbbede90625f742ebf129d3d02c2f8ff84751487d4032e85c181648c7f05",
+  "normalization": "UTF-8 file with trailing whitespace stripped, then one newline appended",
+  "engine_sha256": "5afadf47641a8b49bf54f47650eb848cb3a3dae4509d1f2ee766f913c093bdcd",
+  "counts": [
+    24,
+    48
+  ],
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}
